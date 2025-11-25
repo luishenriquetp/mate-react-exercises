@@ -4,7 +4,7 @@
 // import MathConditionalRendering from './exercises/math-conditional-rendering/MathConditionalRendering.jsx';
 // import StoreCart from './exercises/store-cart/StoreCart.jsx';
 // import ReorderList from './exercises/reorder-list/ReorderList.jsx';
-// import CombinedDBFilters from './exercises/combined-db-filter/ManyFilters.jsx';
+import CombinedDBFilters from './exercises/combined-db-filter/ManyFilters.jsx';
 
 function App() {
   return (
@@ -16,10 +16,9 @@ function App() {
       {/* <MathConditionalRendering /> */}
       {/* <StoreCart /> */}
       {/* <ReorderList /> */}
-      {/* <CombinedDBFilters /> */}
+      <CombinedDBFilters />
     </main>
   );
 }
 
 export default App;
-

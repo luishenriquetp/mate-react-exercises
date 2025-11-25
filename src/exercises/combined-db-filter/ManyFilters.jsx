@@ -13,41 +13,69 @@ Implemente a tabela combinando os DB de Countries e Products
 
 import COUNTRIES from './db/countries.json';
 import PRODUCTS from './db/products.json';
+import { useState } from 'react';
 import './styles.css';
 
+const products = PRODUCTS.map((product) => ({
+  ...product,
+  countryName: COUNTRIES.find((country) => country.id === product.countryId).name,
+}));
+
 export default function CombinedDBFilters() {
+  const [globalFilter, setGlobalFilter] = useState('');
+  const [countryFilter, setCountryFilter] = useState(COUNTRIES.map((item) => item.name));
+  console.log(countryFilter);
+  const handleCountryFilter = (country) => {
+    const findCountry = countryFilter.find((item) => item === country);
+    if (findCountry) {
+      setCountryFilter(countryFilter.filter((item) => item !== country));
+    } else {
+      setCountryFilter([...countryFilter, country]);
+    }
+  };
+
+  const filteredProducts = products.filter(
+    (item) =>
+      (item.name.toLowerCase().includes(globalFilter) || item.description.toLowerCase().includes(globalFilter)) &&
+      countryFilter.includes(item.countryName)
+  );
+
   return (
     <div className="many-filters">
       <div className="filters">
-        <input name="global-filter" placeholder="Global Filter" />
+        <input name="global-filter" onChange={(e) => setGlobalFilter(e.target.value.toLowerCase())} placeholder="Global Filter" />
         <div className="buttons">
-          <button>All</button>
-          <button className="selected">Country1</button>
-          <button>Country2</button>
+          {COUNTRIES.map((country) => (
+            <button
+              className={countryFilter.includes(country.name) ? 'selected' : ''}
+              onClick={() => handleCountryFilter(country.name)}
+              key={country.id}
+            >
+              {country.name}
+            </button>
+          ))}
         </div>
       </div>
       <table>
         <thead>
           <tr>
-            <th>Header1</th>
-            <th>Header2</th>
-            <th>Header2</th>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>COUNTRY ID</th>
+            <th>DESCRIPTION</th>
+            <th>COUNTRY NAME</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Data Row1 Column1</td>
-            <td>Data Row1 Column2</td>
-            <td>Data Row1 Column3</td>
-          </tr>
-          <tr>
-            <td>Data Row2 Column1</td>
-            <td>Data Row2 Column2</td>
-            <td>Data Row2 Column3</td>
-          </tr>
+          {filteredProducts.map((row) => (
+            <tr key={row.id}>
+              {Object.entries(row).map(([key, value]) => (
+                <td key={key}>{value}</td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
 }
-
